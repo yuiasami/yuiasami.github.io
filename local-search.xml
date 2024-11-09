@@ -4,25 +4,6 @@
   
   
   <entry>
-    <title>论文笔记：U-Net based neural network for fringe pattern denoising</title>
-    <link href="/2024/11/09/%E8%AE%BA%E6%96%87%E7%AC%94%E8%AE%B0%EF%BC%9ALRDUNet/"/>
-    <url>/2024/11/09/%E8%AE%BA%E6%96%87%E7%AC%94%E8%AE%B0%EF%BC%9ALRDUNet/</url>
-    
-    <content type="html"><![CDATA[<h1 id="基本信息"><a href="#基本信息" class="headerlink" title="基本信息"></a>基本信息</h1><p>论文题目：U-Net based neural network for fringe pattern denoising<br><a href="https://doi.org/10.1016/j.optlaseng.2021.106829"></a></p><p>本文主要创新点：提出了一种改进的用于去噪的UNet，运用了群卷积（grouped convolution）在减少网络训练参数的同时去噪效果明显好于其他网络</p><p><img src="/_posts/%E8%AE%BA%E6%96%87%E7%AC%94%E8%AE%B0%EF%BC%9ALRDUNet/title.png"></p><h1 id="网络架构"><a href="#网络架构" class="headerlink" title="网络架构"></a>网络架构</h1><p>本文提出的LRDUNet对比传统的UNet，最大的区别在于在同一层之间将2*2卷积与relu激活换成了本文提出的去噪块。其中，橙色箭头代表对输入特征图进行3*3卷积后再经过PReLU激活；天蓝色箭头代表对输入特征图进行1*1卷积后再经过PReLU激活，即改变输出的特征图数目</p><p>网络核心的去噪块结构如下，首先对输入特征图进行1*1卷积以减少特征图数量，然后经过两次3*3群卷积，最后通过1*1卷积将前面所有的特征图整合到一起，生成与输入维度相同的输出特征图。</p><p>群卷积减少网络训练参数：假设卷积核大小为k*k，输入特征图数为f，输出特征图数（卷积核个数）为h，那么，一个卷积核需要训练的参数的数量为k*k*f，总的训练参数的数量为k*k*f*h+h（最后还要加个h是因为卷积完后还有一个偏置项）；但如果将输入特征图g等分，那么总的训练参数的数量为$k<em>k</em>\frac{f}{g}<em>h+h$，减少了$\frac{k^2</em>f+g}{\left( k^2*f+1 \right) *g}$倍</p><h1 id="实验结果"><a href="#实验结果" class="headerlink" title="实验结果"></a>实验结果</h1><p>首先对比了不同的网络结构的效果</p><p>然后与其他网络比较了效果与参数量大小</p><p>最后展示了实验结果</p>]]></content>
-    
-    
-    <categories>
-      
-      <category>论文笔记</category>
-      
-    </categories>
-    
-    
-  </entry>
-  
-  
-  
-  <entry>
     <title>tensorflow实现inceptionNet</title>
     <link href="/2024/11/06/tensorflow%E5%AE%9E%E7%8E%B0inceptionnet/"/>
     <url>/2024/11/06/tensorflow%E5%AE%9E%E7%8E%B0inceptionnet/</url>
