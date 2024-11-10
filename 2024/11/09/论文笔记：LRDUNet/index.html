@@ -38,7 +38,7 @@
 <meta property="og:image" content="https://yuiasami.github.io/2024/11/09/%E8%AE%BA%E6%96%87%E7%AC%94%E8%AE%B0%EF%BC%9ALRDUNet/result1.png">
 <meta property="og:image" content="https://yuiasami.github.io/2024/11/09/%E8%AE%BA%E6%96%87%E7%AC%94%E8%AE%B0%EF%BC%9ALRDUNet/result2.png">
 <meta property="article:published_time" content="2024-11-09T05:22:37.000Z">
-<meta property="article:modified_time" content="2024-11-09T07:30:35.607Z">
+<meta property="article:modified_time" content="2024-11-10T04:10:26.050Z">
 <meta property="article:author" content="冬之雪夏之夜">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://yuiasami.github.io/2024/11/09/%E8%AE%BA%E6%96%87%E7%AC%94%E8%AE%B0%EF%BC%9ALRDUNet/title.png">
@@ -58,8 +58,6 @@
   <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
-
-  <link  rel="stylesheet" href="https://lib.baomitu.com/KaTeX/0.16.2/katex.min.css" />
 
 
 
@@ -238,7 +236,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          445 字
+          428 字
         
       </span>
     
@@ -311,13 +309,7 @@
 <img src="/2024/11/09/%E8%AE%BA%E6%96%87%E7%AC%94%E8%AE%B0%EF%BC%9ALRDUNet/fig2.png" srcset="/img/loading.gif" lazyload class="" width="3">
 <p>网络核心的去噪块结构如下，首先对输入特征图进行1*1卷积以减少特征图数量，然后经过两次3*3群卷积，最后通过1*1卷积将前面所有的特征图整合到一起，生成与输入维度相同的输出特征图。</p>
 <img src="/2024/11/09/%E8%AE%BA%E6%96%87%E7%AC%94%E8%AE%B0%EF%BC%9ALRDUNet/fig34.png" srcset="/img/loading.gif" lazyload class="" width="4">
-<p>群卷积减少网络训练参数：假设卷积核大小为k*k，输入特征图数为f，输出特征图数（卷积核个数）为h，那么，一个卷积核需要训练的参数的数量为k*k*f，总的训练参数的数量为k*k*f*h+h（最后还要加个h是因为卷积完后还有一个偏置项）；但如果将输入特征图g等分，那么总的训练参数的数量为</p>
-<p class='katex-block katex-error ' title='ParseError: KaTeX parse error: Undefined control sequence: \* at position 2: k\̲*̲k\*\frac{f}{g}\…'>k\*k\*\frac{f}{g}\*h+h
-</p>
-<p>，减少了</p>
-<p class='katex-block katex-error ' title='ParseError: KaTeX parse error: Undefined control sequence: \* at position 10: \frac{k^2\̲*̲f+g}{\left( k^2…'>\frac{k^2\*f+g}{\left( k^2\*f+1 \right) \*g}
-</p>
-<p>倍</p>
+<p>群卷积减少网络训练参数：假设卷积核大小为k*k，输入特征图数为f，输出特征图数（卷积核个数）为h，那么，一个卷积核需要训练的参数的数量为k*k*f，总的训练参数的数量为k*k*f*h+h（最后还要加个h是因为卷积完后还有一个偏置项）；但如果将输入特征图g等分，那么总的训练参数的数量为k*k*f/g*h+h</p>
 <h1>实验结果</h1>
 <p>首先对比了不同的网络结构的效果</p>
 <img src="/2024/11/09/%E8%AE%BA%E6%96%87%E7%AC%94%E8%AE%B0%EF%BC%9ALRDUNet/table1.png" srcset="/img/loading.gif" lazyload class="" width="5">
@@ -472,11 +464,6 @@
 
 
   
-
-
-  
-  
-
 
 
 
