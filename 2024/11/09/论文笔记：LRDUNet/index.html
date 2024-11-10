@@ -24,7 +24,7 @@
     <meta name="description" content="基本信息 论文题目：U-Net based neural network for fringe pattern denoising  本文主要创新点：提出了一种改进的用于去噪的UNet，运用了群卷积（grouped convolution）在减少网络训练参数的同时去噪效果明显好于其他网络  网络架构 本文提出的LRDUNet对比传统的UNet，最大的区别在于在同一层之间将2*2卷积与relu激活换">
 <meta property="og:type" content="article">
 <meta property="og:title" content="论文笔记：LRDUNet">
-<meta property="og:url" content="https://yuiasami.github.io/2024/11/09/%E8%AE%BA%E6%96%87%E7%AC%94%E8%AE%B0%EF%BC%9ALRDUNet/index.html">
+<meta property="og:url" content="https://www.fuyuyuki.top/2024/11/09/%E8%AE%BA%E6%96%87%E7%AC%94%E8%AE%B0%EF%BC%9ALRDUNet/index.html">
 <meta property="og:site_name" content="冬之雪夏之夜的Blog">
 <meta property="og:description" content="基本信息 论文题目：U-Net based neural network for fringe pattern denoising  本文主要创新点：提出了一种改进的用于去噪的UNet，运用了群卷积（grouped convolution）在减少网络训练参数的同时去噪效果明显好于其他网络  网络架构 本文提出的LRDUNet对比传统的UNet，最大的区别在于在同一层之间将2*2卷积与relu激活换">
 <meta property="og:locale" content="zh_CN">
@@ -85,7 +85,7 @@
   <script id="fluid-configs">
     var Fluid = window.Fluid || {};
     Fluid.ctx = Object.assign({}, Fluid.ctx)
-    var CONFIG = {"hostname":"yuiasami.github.io","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-11-06T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+    var CONFIG = {"hostname":"www.fuyuyuki.top","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-11-06T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
 
     if (CONFIG.web_analytics.follow_dnt) {
       var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
@@ -358,7 +358,7 @@
   <div class="license-box my-3">
     <div class="license-title">
       <div>论文笔记：LRDUNet</div>
-      <div>https://yuiasami.github.io/2024/11/09/论文笔记：LRDUNet/</div>
+      <div>https://www.fuyuyuki.top/2024/11/09/论文笔记：LRDUNet/</div>
     </div>
     <div class="license-meta">
       
