@@ -21,28 +21,23 @@
   <meta name="author" content="冬之雪夏之夜">
   <meta name="keywords" content="">
   
-    <meta name="description" content="ResNet即深度残差网络，由何恺明及其团队提出，是深度学习领域又一具有开创性的工作，通过对残差结构的运用，ResNet使得训练数百层的网络成为了可能，从而具有非常强大的表征能力，其网络结构如图所示  ResNet的核心是残差结构，如图所示  在残差结构中，ResNet不再让下一层直接拟合我们想得到的底层映射，而是令其对一种残差映射进行拟合。若期望得到的底层映射为H(x)，我们令堆叠的非线性层拟合">
+    <meta name="description" content="本文基于项目VITS-fast-fine-tuning中的本地训练指南LOCAL.md，加入了自己在训练过程中碰到的一些问题和解决方法 1.确保本地安装了python 3.8版本（虚拟环境也可以），CMake &amp; C&#x2F;C++编译器（实测只安装CMake会在第6步时报错无法编译，推荐直接安装Visual Studio，会直接安装好编译环境）以及ffmpeg 2.克隆项目仓库 1git clo">
 <meta property="og:type" content="article">
-<meta property="og:title" content="tensorflow实现ResNet">
-<meta property="og:url" content="https://www.fuyuyuki.top/2024/11/13/tensorflow%E5%AE%9E%E7%8E%B0resnet/index.html">
+<meta property="og:title" content="使用vits训练自己的语音模型">
+<meta property="og:url" content="https://www.fuyuyuki.top/2024/11/14/%E4%BD%BF%E7%94%A8vits%E8%AE%AD%E7%BB%83%E8%87%AA%E5%B7%B1%E7%9A%84%E8%AF%AD%E9%9F%B3%E6%A8%A1%E5%9E%8B/index.html">
 <meta property="og:site_name" content="冬之雪夏之夜的Blog">
-<meta property="og:description" content="ResNet即深度残差网络，由何恺明及其团队提出，是深度学习领域又一具有开创性的工作，通过对残差结构的运用，ResNet使得训练数百层的网络成为了可能，从而具有非常强大的表征能力，其网络结构如图所示  ResNet的核心是残差结构，如图所示  在残差结构中，ResNet不再让下一层直接拟合我们想得到的底层映射，而是令其对一种残差映射进行拟合。若期望得到的底层映射为H(x)，我们令堆叠的非线性层拟合">
+<meta property="og:description" content="本文基于项目VITS-fast-fine-tuning中的本地训练指南LOCAL.md，加入了自己在训练过程中碰到的一些问题和解决方法 1.确保本地安装了python 3.8版本（虚拟环境也可以），CMake &amp; C&#x2F;C++编译器（实测只安装CMake会在第6步时报错无法编译，推荐直接安装Visual Studio，会直接安装好编译环境）以及ffmpeg 2.克隆项目仓库 1git clo">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://files.catbox.moe/lsomlz.jpg">
-<meta property="og:image" content="https://files.catbox.moe/kudh2q.jpg">
-<meta property="og:image" content="https://files.catbox.moe/a24u2j.jpg">
-<meta property="og:image" content="https://files.catbox.moe/4290j8.jpg">
-<meta property="article:published_time" content="2024-11-13T06:59:04.000Z">
-<meta property="article:modified_time" content="2024-11-13T10:22:44.142Z">
+<meta property="article:published_time" content="2024-11-14T09:42:30.000Z">
+<meta property="article:modified_time" content="2024-11-14T10:55:22.754Z">
 <meta property="article:author" content="冬之雪夏之夜">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://files.catbox.moe/lsomlz.jpg">
   
   
     <meta name="referrer" content="no-referrer-when-downgrade">
   
   
-  <title>tensorflow实现ResNet - 冬之雪夏之夜的Blog</title>
+  <title>使用vits训练自己的语音模型 - 冬之雪夏之夜的Blog</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -208,7 +203,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="tensorflow实现ResNet"></span>
+            <span id="subtitle" data-typed-text="使用vits训练自己的语音模型"></span>
           
         </div>
 
@@ -219,8 +214,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2024-11-13 14:59" pubdate>
-          2024年11月13日 下午
+        <time datetime="2024-11-14 17:42" pubdate>
+          2024年11月14日 下午
         </time>
       </span>
     
@@ -231,7 +226,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          1.1k 字
+          1k 字
         
       </span>
     
@@ -288,29 +283,55 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">tensorflow实现ResNet</h1>
+            <h1 id="seo-header">使用vits训练自己的语音模型</h1>
             
             
               <div class="markdown-body">
                 
-                <p>ResNet即深度残差网络，由何恺明及其团队提出，是深度学习领域又一具有开创性的工作，通过对残差结构的运用，ResNet使得训练数百层的网络成为了可能，从而具有非常强大的表征能力，其网络结构如图所示<br>
-<img src="https://files.catbox.moe/lsomlz.jpg" srcset="/img/loading.gif" lazyload alt="ResNet结构"></p>
-<p>ResNet的核心是残差结构，如图所示<br>
-<img src="https://files.catbox.moe/kudh2q.jpg" srcset="/img/loading.gif" lazyload alt=""></p>
-<p>在残差结构中，ResNet不再让下一层直接拟合我们想得到的底层映射，而是令其对一种残差映射进行拟合。若期望得到的底层映射为H(x)，我们令堆叠的非线性层拟合另一个映射F(x) := H(x) – x，则原有映射变为F(x) + x。对这种新的残差映射进行优化时，要比优化原有的非相关映射更为容易。不妨考虑极限情况，如果一个恒等映射是最优的，那么将残差向零逼近显然会比利用大量非线性层直接进行拟合更容易</p>
-<p>ResNet引入残差结构最主要的目的是解决网络层数不断加深时导致的梯度消失问题，如果只是简单地堆叠更多层数，就会导致梯度消失（爆炸）问题，它从根源上导致了函数无法收敛。然而，通过标准初始化（normalized initialization）以及中间标准化层（intermediate normalization layer），已经可以较好地解决这个问题了，这使得深度为数十层的网络在反向传播过程中，可以通过随机梯度下降（SGD）的方式开始收敛。</p>
-<p>但是，当深度更深的网络也可以开始收敛时，网络退化的问题就显露了出来：随着网络深度的增加，准确率先是达到瓶颈（这是很常见的），然后便开始迅速下降。需要注意的是，这种退化并不是由过拟合引起的。对于一个深度比较合适的网络来说，继续增加层数反而会导致训练错误率的提升，下图就是一个很好的例子<br>
-<img src="https://files.catbox.moe/a24u2j.jpg" srcset="/img/loading.gif" lazyload alt=""></p>
-<p>ResNet解决的正是这个问题，其核心思路为：对一个准确率达到饱和的浅层网络，在它后面加几个恒等映射层（即y = x，输出等于输入），增加网络深度的同时不增加误差。这使得神经网络的层数可以超越之前的约束，提高准确率。下图展示了具体的残差结构<br>
-<img src="https://files.catbox.moe/4290j8.jpg" srcset="/img/loading.gif" lazyload alt=""></p>
-<p>上图中的实线和虚线均表示恒等映射，实线表示通道相同，计算方式为H(x) = F(x) + x；虚线表示通道不同，计算方式为H(x) = F(x) + Wx，其中W为卷积操作，目的是调整x的维度（通道数）</p>
-<p>可以借助tf.keras来实现这种残差结构，代码如下：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">ResnetBlock</span>(<span class="hljs-params"><span class="hljs-built_in">input</span>,filters,strides,residual_path</span>):<br>    residual=<span class="hljs-built_in">input</span><br>    x=tf.keras.layers.Conv2D(filters=filters,kernel_size=(<span class="hljs-number">3</span>,<span class="hljs-number">3</span>),strides=strides,padding=<span class="hljs-string">&#x27;same&#x27;</span>,use_bias=<span class="hljs-literal">False</span>)(<span class="hljs-built_in">input</span>)<br>    x=tf.keras.layers.BatchNormalization()(x)<br>    x=tf.keras.layers.Activation(<span class="hljs-string">&#x27;relu&#x27;</span>)(x)<br><br>    x=tf.keras.layers.Conv2D(filters=filters,kernel_size=(<span class="hljs-number">3</span>,<span class="hljs-number">3</span>),strides=<span class="hljs-number">1</span>,padding=<span class="hljs-string">&#x27;same&#x27;</span>,use_bias=<span class="hljs-literal">False</span>)(x)<br>    y=tf.keras.layers.BatchNormalization()(x)<br><br>    <span class="hljs-keyword">if</span> residual_path:<br>        residual=tf.keras.layers.Conv2D(filters=filters,kernel_size=(<span class="hljs-number">1</span>,<span class="hljs-number">1</span>),strides=strides,padding=<span class="hljs-string">&#x27;same&#x27;</span>,use_bias=<span class="hljs-literal">False</span>)(<span class="hljs-built_in">input</span>)<br>        residual=tf.keras.layers.BatchNormalization()(residual)<br><br>    output=tf.keras.layers.Activation(<span class="hljs-string">&#x27;relu&#x27;</span>)(y+residual)<br>    <span class="hljs-keyword">return</span> output<br></code></pre></td></tr></table></figure>
-<p>利用这个基本结构就可以搭建出ResNet模型</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">Resnet18</span>(<span class="hljs-params">block_list,initial_filters</span>):<br>    block_num=<span class="hljs-built_in">len</span>(block_list)<br>    out_filters=initial_filters<br><br>    inputs=tf.keras.Input(shape=(<span class="hljs-literal">None</span>,<span class="hljs-literal">None</span>,<span class="hljs-number">3</span>))<br>    x=tf.keras.layers.Conv2D(filters=out_filters,kernel_size=(<span class="hljs-number">3</span>,<span class="hljs-number">3</span>),strides=<span class="hljs-number">1</span>,padding=<span class="hljs-string">&#x27;same&#x27;</span>,use_bias=<span class="hljs-literal">False</span>,kernel_initializer=<span class="hljs-string">&#x27;he_normal&#x27;</span>)(inputs)<br>    x=tf.keras.layers.BatchNormalization()(x)<br>    x=tf.keras.layers.Activation(<span class="hljs-string">&#x27;relu&#x27;</span>)(x)<br><br>    <span class="hljs-keyword">for</span> block_id <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(block_num):<br>        <span class="hljs-keyword">for</span> layer_id <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(block_list[block_id]):<br>            <span class="hljs-keyword">if</span> block_id!=<span class="hljs-number">0</span> <span class="hljs-keyword">and</span> layer_id==<span class="hljs-number">0</span>:<br>                x=ResnetBlock(x,filters=out_filters,strides=<span class="hljs-number">2</span>,residual_path=<span class="hljs-literal">True</span>)<br>            <span class="hljs-keyword">else</span>:<br>                x=ResnetBlock(x,filters=out_filters,strides=<span class="hljs-number">1</span>,residual_path=<span class="hljs-literal">False</span>)<br>        out_filters*=<span class="hljs-number">2</span><br><br>    x=tf.keras.layers.GlobalAveragePooling2D()(x)<br>    output=tf.keras.layers.Dense(<span class="hljs-number">10</span>,activation=<span class="hljs-string">&#x27;softmax&#x27;</span>,kernel_regularizer=tf.keras.regularizers.l2())(x)<br>    model=tf.keras.Model(inputs,output)<br>    <span class="hljs-keyword">return</span> model<br></code></pre></td></tr></table></figure>
-<p>参数block_list表示ResNet中block的数量；initial_filters表示初始的卷积核数量。可以看到该模型同样使用了全局平均池化的方式来替代全连接层。</p>
-<p>总体上看，ResNet取得的成果还是相当巨大的，它将网络深度提升到了152层，于2015年将ImageNet图像识别Top5错误率降至3.57 %</p>
-<p>完整利用ResNet训练difar10数据集的代码：<a target="_blank" rel="noopener" href="https://github.com/yuiasami/tensorflow_cnn/tree/main">GitHub - yuiasami/tensorflow_cnn</a></p>
+                <p>本文基于项目<a target="_blank" rel="noopener" href="https://github.com/Plachtaa/VITS-fast-fine-tuning">VITS-fast-fine-tuning</a>中的本地训练指南<a target="_blank" rel="noopener" href="https://github.com/Plachtaa/VITS-fast-fine-tuning/blob/main/LOCAL.md">LOCAL.md</a>，加入了自己在训练过程中碰到的一些问题和解决方法</p>
+<p>1.确保本地安装了python 3.8版本（虚拟环境也可以），CMake &amp; C/C++编译器（实测只安装CMake会在第6步时报错无法编译，推荐直接安装Visual Studio，会直接安装好编译环境）以及ffmpeg</p>
+<p>2.克隆项目仓库</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">git <span class="hljs-built_in">clone</span> https://github.com/Plachtaa/VITS-fast-fine-tuning.git<br></code></pre></td></tr></table></figure>
+<p>3.安装相应依赖</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">pip install -r requirements.txt<br></code></pre></td></tr></table></figure>
+<p>但是项目中的requirments中没有指定gradio的版本，会导致后续推理时无法打开webui；以及numpy版本过低会导致后续无法用whsiper进行文本转换，因此放一个能用的requirments在下面，可以直接覆盖项目里的requirments.txt</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">Cython</span>==<span class="hljs-number">0</span>.<span class="hljs-number">29</span>.<span class="hljs-number">21</span><br><span class="hljs-attribute">librosa</span>==<span class="hljs-number">0</span>.<span class="hljs-number">9</span>.<span class="hljs-number">2</span><br><span class="hljs-attribute">matplotlib</span>==<span class="hljs-number">3</span>.<span class="hljs-number">3</span>.<span class="hljs-number">1</span><br><span class="hljs-attribute">scikit</span>-learn==<span class="hljs-number">1</span>.<span class="hljs-number">0</span>.<span class="hljs-number">2</span><br><span class="hljs-attribute">scipy</span>==<span class="hljs-number">1</span>.<span class="hljs-number">10</span>.<span class="hljs-number">1</span><br><span class="hljs-attribute">numpy</span>==<span class="hljs-number">1</span>.<span class="hljs-number">24</span>.<span class="hljs-number">0</span><br><span class="hljs-attribute">tensorboard</span><br><span class="hljs-attribute">torch</span>==<span class="hljs-number">1</span>.<span class="hljs-number">13</span>.<span class="hljs-number">1</span>+cu116<br><span class="hljs-attribute">torchvision</span><br><span class="hljs-attribute">torchaudio</span>==<span class="hljs-number">0</span>.<span class="hljs-number">13</span>.<span class="hljs-number">1</span>+cu116<br><span class="hljs-attribute">unidecode</span>==<span class="hljs-number">1</span>.<span class="hljs-number">3</span>.<span class="hljs-number">8</span><br><span class="hljs-attribute">pyopenjtalk</span>-prebuilt<br><span class="hljs-attribute">jamo</span>==<span class="hljs-number">0</span>.<span class="hljs-number">4</span>.<span class="hljs-number">1</span><br><span class="hljs-attribute">pypinyin</span>==<span class="hljs-number">0</span>.<span class="hljs-number">53</span>.<span class="hljs-number">0</span><br><span class="hljs-attribute">jieba</span>==<span class="hljs-number">0</span>.<span class="hljs-number">42</span>.<span class="hljs-number">1</span><br><span class="hljs-attribute">protobuf</span>==<span class="hljs-number">5</span>.<span class="hljs-number">28</span>.<span class="hljs-number">3</span><br><span class="hljs-attribute">cn2an</span>==<span class="hljs-number">0</span>.<span class="hljs-number">5</span>.<span class="hljs-number">22</span><br><span class="hljs-attribute">inflect</span>==<span class="hljs-number">7</span>.<span class="hljs-number">4</span>.<span class="hljs-number">0</span><br><span class="hljs-attribute">eng_to_ipa</span><br><span class="hljs-attribute">ko_pron</span><br><span class="hljs-attribute">indic_transliteration</span>==<span class="hljs-number">2</span>.<span class="hljs-number">3</span>.<span class="hljs-number">37</span><br><span class="hljs-attribute">num_thai</span>==<span class="hljs-number">0</span>.<span class="hljs-number">0</span>.<span class="hljs-number">5</span><br><span class="hljs-attribute">opencc</span>==<span class="hljs-number">1</span>.<span class="hljs-number">1</span>.<span class="hljs-number">1</span><br><span class="hljs-attribute">demucs</span><br><span class="hljs-attribute">git</span>+https://github.com/openai/whisper.git <br><span class="hljs-attribute">gradio</span>==<span class="hljs-number">3</span>.<span class="hljs-number">47</span>.<span class="hljs-number">0</span><br><br><span class="hljs-attribute">moviepy</span>==<span class="hljs-number">1</span>.<span class="hljs-number">0</span>.<span class="hljs-number">3</span><br><span class="hljs-attribute">openai</span>-whisper==<span class="hljs-number">20240930</span><br><span class="hljs-attribute">regex</span>==<span class="hljs-number">2024</span>.<span class="hljs-number">11</span>.<span class="hljs-number">6</span><br><span class="hljs-attribute">tqdm</span>==<span class="hljs-number">4</span>.<span class="hljs-number">67</span>.<span class="hljs-number">0</span><br></code></pre></td></tr></table></figure>
+<p>4.安装GPU版本的pytorch（要求CUDA版本为11.6或11.7，实际上我的CUDA版本为11.2，安装11.6版本的也没有问题）</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># CUDA 11.6</span><br>pip install torch==1.13.1+cu116 torchvision==0.14.1+cu116 torchaudio==0.13.1 --extra-index-url https://download.pytorch.org/whl/cu116<br><span class="hljs-comment"># CUDA 11.7</span><br>pip install torch==1.13.1+cu117 torchvision==0.14.1+cu117 torchaudio==0.13.1 --extra-index-url https://download.pytorch.org/whl/cu117<br></code></pre></td></tr></table></figure>
+<p>5.安装处理视频数据的库</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">pip install imageio==2.4.1<br>pip install moviepy<br></code></pre></td></tr></table></figure>
+<p>6.编译monotonic align</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">cd</span> monotonic_align<br><span class="hljs-built_in">mkdir</span> monotonic_align<br>python setup.py build_ext --inplace<br><span class="hljs-built_in">cd</span> ..<br></code></pre></td></tr></table></figure>
+<p>7.<a target="_blank" rel="noopener" href="https://huggingface.co/datasets/Plachta/sampled_audio4ft/resolve/main/sampled_audio4ft_v2.zip">下载辅助数据（可选）</a>并解压到项目根目录，然后运行以下命令</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">mkdir</span> pretrained_models<br><span class="hljs-built_in">mkdir</span> video_data<br><span class="hljs-built_in">mkdir</span> raw_audio<br><span class="hljs-built_in">mkdir</span> denoised_audio<br><span class="hljs-built_in">mkdir</span> custom_character_voice<br><span class="hljs-built_in">mkdir</span> segmented_character_voice<br></code></pre></td></tr></table></figure>
+<p>8.下载预训练模型，可选项有</p>
+<figure class="highlight avrasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs avrasm"><span class="hljs-symbol">CJE:</span> 三语（中日英）<br><span class="hljs-symbol">CJ:</span> 双语（中日）<br><span class="hljs-symbol">C:</span> 只有中文<br></code></pre></td></tr></table></figure>
+<p>对于Linux用户</p>
+<p>下载CJE模型，运行以下命令</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash">wget https://huggingface.co/spaces/Plachta/VITS-Umamusume-voice-synthesizer/resolve/main/pretrained_models/D_trilingual.pth -O ./pretrained_models/D_0.pth<br>wget https://huggingface.co/spaces/Plachta/VITS-Umamusume-voice-synthesizer/resolve/main/pretrained_models/G_trilingual.pth -O ./pretrained_models/G_0.pth<br>wget https://huggingface.co/spaces/Plachta/VITS-Umamusume-voice-synthesizer/resolve/main/configs/uma_trilingual.json -O ./configs/finetune_speaker.json<br></code></pre></td></tr></table></figure>
+<p>下载CJ模型，运行以下命令</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash">wget https://huggingface.co/spaces/sayashi/vits-uma-genshin-honkai/resolve/main/model/D_0-p.pth -O ./pretrained_models/D_0.pth<br>wget https://huggingface.co/spaces/sayashi/vits-uma-genshin-honkai/resolve/main/model/G_0-p.pth -O ./pretrained_models/G_0.pth<br>wget https://huggingface.co/spaces/sayashi/vits-uma-genshin-honkai/resolve/main/model/config.json -O ./configs/finetune_speaker.json<br></code></pre></td></tr></table></figure>
+<p>下载C模型，运行以下命令</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash">wget https://huggingface.co/datasets/Plachta/sampled_audio4ft/resolve/main/VITS-Chinese/D_0.pth -O ./pretrained_models/D_0.pth<br>wget https://huggingface.co/datasets/Plachta/sampled_audio4ft/resolve/main/VITS-Chinese/G_0.pth -O ./pretrained_models/G_0.pth<br>wget https://huggingface.co/datasets/Plachta/sampled_audio4ft/resolve/main/VITS-Chinese/config.json -O ./configs/finetune_speaker.json<br></code></pre></td></tr></table></figure>
+<p>对于windows用户，手动从上方命令中的地址下载 <code>G_0.pth</code>, <code>D_0.pth</code>, <code>finetune_speaker.json</code></p>
+<p>把所有<code>G</code>开头的模型重命名为 <code>G_0.pth</code>, <code>D</code> 开头的模型重命名为 <code>D_0.pth</code>, 把json文件重命名为 <code>finetune_speaker.json</code>.<br>
+把 <code>G_0.pth</code>, <code>D_0.pth</code> 放在 <code>pretrained_models</code> 目录下<br>
+把 <code>finetune_speaker.json</code> 放在 <code>configs</code> 目录下</p>
+<p>9.处理数据，把所有视频文件按照<a target="_blank" rel="noopener" href="https://github.com/Plachtaa/VITS-fast-fine-tuning/blob/main/DATA.MD">DATA.MD</a>中的方式命名后放在video_data目录下</p>
+<p>10.处理所有音频数据</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs bash">python scripts/video2audio.py<br>python scripts/denoise_audio.py<br>python scripts/long_audio_transcribe.py --languages <span class="hljs-string">&quot;&#123;PRETRAINED_MODEL&#125;&quot;</span> --whisper_size large<br>python scripts/short_audio_transcribe.py --languages <span class="hljs-string">&quot;&#123;PRETRAINED_MODEL&#125;&quot;</span> --whisper_size large<br>python scripts/resample.py<br></code></pre></td></tr></table></figure>
+<p>将{PRETRAINED_MODEL}根据之前下载的预训练模型换成CJE、CJ、C，例如，如果下载的是CJE，那么命令应该为</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">python scripts/long_audio_transcribe.py --languages <span class="hljs-string">&quot;CJE&quot;</span> --whisper_size lar<br></code></pre></td></tr></table></figure>
+<p>确保你的GPU显存大于12G，否则将whisper_size后的参数换成medium或者small（实测消耗12.6G显存）</p>
+<p>11.处理所有文本数据。如果你选择使用辅助数据，运行 <code>python preprocess_v2.py --add_auxiliary_data True --languages &quot;&#123;PRETRAINED_MODEL&#125;&quot;</code>，否则运行 <code>python preprocess_v2.py --languages &quot;&#123;PRETRAINED_MODEL&#125;&quot;</code>，同样，将{PRETRAINED_MODEL}根据之前下载的预训练模型换成CJE、CJ、C</p>
+<p>12.开始训练，运行以下命令</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">python finetune_speaker_v2.py -m ./OUTPUT_MODEL --max_epochs <span class="hljs-string">&quot;&#123;Maximum_epochs&#125;&quot;</span> --drop_speaker_embed True<br></code></pre></td></tr></table></figure>
+<p>将{Maximum_epochs}换成你希望的训练轮数，推荐100epochs以上</p>
+<p>如果希望断点续训，将命令改为</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">python finetune_speaker_v2.py -m ./OUTPUT_MODEL --max_epochs <span class="hljs-string">&quot;&#123;Maximum_epochs&#125;&quot;</span> --drop_speaker_embed False --cont True<br></code></pre></td></tr></table></figure>
+<p>确保在OUTPUT_MODEL目录里面有你之前的<code>G_latest.pth</code> 和 <code>D_latest.pth</code></p>
+<p>13，训练完成后，运行以下命令就可以使用你的模型进行推理了（原来的命令缺少了config路径导致无法推理，加上即可）</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">python VC_inference.py --model_dir ./OUTPUT_MODEL/G_latest.pth --config_dir ./OUTPUT_MODEL/config.json --share True<br></code></pre></td></tr></table></figure>
 
                 
               </div>
@@ -318,27 +339,6 @@
             <hr/>
             <div>
               <div class="post-metas my-3">
-  
-    <div class="post-meta mr-3 d-flex align-items-center">
-      <i class="iconfont icon-category"></i>
-      
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" class="category-chain-item">深度学习</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-    </div>
   
   
 </div>
@@ -349,8 +349,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>tensorflow实现ResNet</div>
-      <div>https://www.fuyuyuki.top/2024/11/13/tensorflow实现resnet/</div>
+      <div>使用vits训练自己的语音模型</div>
+      <div>https://www.fuyuyuki.top/2024/11/14/使用vits训练自己的语音模型/</div>
     </div>
     <div class="license-meta">
       
@@ -362,7 +362,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2024年11月13日</div>
+          <div>2024年11月14日</div>
         </div>
       
       
@@ -394,18 +394,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2024/11/14/%E4%BD%BF%E7%94%A8vits%E8%AE%AD%E7%BB%83%E8%87%AA%E5%B7%B1%E7%9A%84%E8%AF%AD%E9%9F%B3%E6%A8%A1%E5%9E%8B/" title="使用vits训练自己的语音模型">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">使用vits训练自己的语音模型</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2024/11/09/%E8%AE%BA%E6%96%87%E7%AC%94%E8%AE%B0%EF%BC%9ALRDUNet/" title="论文笔记：LRDUNet">
-                        <span class="hidden-mobile">论文笔记：LRDUNet</span>
+                      <a href="/2024/11/13/tensorflow%E5%AE%9E%E7%8E%B0resnet/" title="tensorflow实现ResNet">
+                        <span class="hidden-mobile">tensorflow实现ResNet</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
